@@ -2,10 +2,51 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 // 如果编辑器提示 path 模块找不到，则可以安装一下 @types/node -> npm i @types/node -D 开发者可以在 TypeScript 中使用 Node.js 的 API
 import { resolve } from "path";
+import path from "path";
+const pathSrc = path.resolve(__dirname, "src");
+import AutoImport from "unplugin-auto-import/vite";
+import Components from "unplugin-vue-components/vite";
+
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import Icons from "unplugin-icons/vite";
+import IconsResolver from "unplugin-icons/resolver";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    AutoImport({
+      // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+      imports: ["vue"],
+      eslintrc: {
+        enabled: true, // 是否自动生成 eslint 规则，建议生成之后设置 false
+        filepath: "./.eslintrc-auto-import.json", // 指定自动导入函数 eslint 规则的文件
+      },
+      resolvers: [
+        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+        ElementPlusResolver(),
+        // 自动导入图标组件
+        IconsResolver({}),
+      ],
+      vueTemplate: true, // 是否在 vue 模板中自动导入
+      dts: path.resolve(pathSrc, "types", "auto-imports.d.ts"), // 自动导入组件类型声明文件位置，默认根目录
+    }),
+    Components({
+      resolvers: [
+        // 自动导入 Element Plus 组件
+        ElementPlusResolver(),
+        // 自动注册图标组件
+        IconsResolver({
+          enabledCollections: ["ep"], // element-plus图标库，其他图标库 https://icon-sets.iconify.design/
+        }),
+      ],
+      dts: path.resolve(pathSrc, "types", "components.d.ts"), //  自动导入组件类型声明文件位置，默认根目录
+    }),
+    Icons({
+      // 自动安装图标库
+      autoInstall: true,
+    }),
+  ],
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"), // 设置`@`指向`src`目录
