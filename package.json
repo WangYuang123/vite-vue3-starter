@@ -19,6 +19,7 @@
     "@types/node": "^20.1.2",
     "@vitejs/plugin-vue": "^4.1.0",
     "fast-glob": "^3.2.11",
+    "sass": "^1.63.6",
     "typescript": "^5.0.2",
     "unplugin-auto-import": "^0.16.4",
     "unplugin-icons": "^0.16.3",

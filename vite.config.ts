@@ -11,6 +11,8 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
 
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -46,6 +48,12 @@ export default defineConfig({
       // 自动安装图标库
       autoInstall: true,
     }),
+    createSvgIconsPlugin({
+      // 指定需要缓存的图标文件夹
+      iconDirs: [path.resolve(process.cwd(), "src/assets/icons")],
+      // 指定symbolId格式
+      symbolId: "icon-[dir]-[name]",
+    }),
   ],
   resolve: {
     alias: {
@@ -67,5 +75,16 @@ export default defineConfig({
     //     rewrite: (path) => path.replace('/api/', '/')
     //   }
     // }
+  },
+  // vite.config.ts
+  css: {
+    // CSS 预处理器
+    preprocessorOptions: {
+      //define global scss variable
+      scss: {
+        javascriptEnabled: true,
+        additionalData: `@use "@/styles/variables.scss" as *;`,
+      },
+    },
   },
 });
