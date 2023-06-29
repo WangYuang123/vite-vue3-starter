@@ -13,6 +13,8 @@ import IconsResolver from "unplugin-icons/resolver";
 
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 
+import UnoCSS from 'unocss/vite'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -54,6 +56,7 @@ export default defineConfig({
       // 指定symbolId格式
       symbolId: "icon-[dir]-[name]",
     }),
+    UnoCSS()
   ],
   resolve: {
     alias: {
