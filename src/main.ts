@@ -9,6 +9,8 @@ import { setupStore } from "@/store";
 
 import "@/permission";
 
+import '@/styles/index.scss';
+
 const app = createApp(App);
 
 // 全局注册 状态管理(store)
