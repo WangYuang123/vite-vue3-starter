@@ -58,6 +58,9 @@
     "watch": true,
     "watchEffect": true,
     "watchPostEffect": true,
-    "watchSyncEffect": true
+    "watchSyncEffect": true,
+    "ElForm": true,
+    "ElMessage": true,
+    "ElMessageBox": true
   }
 }

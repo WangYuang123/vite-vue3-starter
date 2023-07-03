@@ -1,8 +1,17 @@
 import { createApp } from "vue";
-import { createPinia } from "pinia";
+
 import App from "./App.vue";
 import "virtual:svg-icons-register";
 import "uno.css";
 import router from "./router/index";
 
-createApp(App).use(createPinia()).use(router).mount("#app");
+import { setupStore } from "@/store";
+
+import "@/permission";
+
+const app = createApp(App);
+
+// 全局注册 状态管理(store)
+setupStore(app);
+
+app.use(router).mount("#app");
