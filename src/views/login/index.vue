@@ -100,32 +100,22 @@ function getCaptcha() {
 }
 
 function handleLogin() {
-  loginFormRef.value.validate((valid: boolean, fields: string) => {
+  loginFormRef.value.validate((valid: boolean) => {
     if (valid) {
-      loading.value = true
-      userStore
-        .login(loginData.value)
-        .then(() => {
-          const query: LocationQuery = route.query;
-          const redirect = (query.redirect as LocationQueryValue) ?? "/";
+      loading.value = true;
+      userStore.login(loginData.value).then(() => {
+        const query: LocationQuery = route.query;
+        const redirect = (query.redirect as LocationQueryValue) ?? "/";
 
-          const otherQueryParams = Object.keys(query).reduce((acc: any, cur: string) => {
-            if (cur !== "redirect") {
-              acc[cur] = query[cur];
-            }
-            return acc;
-          }, {});
+        const otherQueryParams = Object.keys(query).reduce((acc: any, cur: string) => {
+          if (cur !== "redirect") {
+            acc[cur] = query[cur];
+          }
+          return acc;
+        }, {});
 
-          router.push({ path: redirect, query: otherQueryParams });
-        })
-        .catch(() => {
-          getCaptcha()
-        })
-        .finally(() => {
-          loading.value = false
-        });
-    } else {
-      console.log("error submit!", fields);
+        router.push({ path: redirect, query: otherQueryParams });
+      });
     }
   });
 }

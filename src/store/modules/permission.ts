@@ -1,34 +1,83 @@
-// src/store/modules/permission.ts 
-import { listRoutes } from '@/api/menu';
+import { store } from "@/store";
+import { defineStore } from "pinia";
+import { RouteRecordRaw } from "vue-router";
+import { constantRoutes } from "@/router";
+import { listRoutes } from "@/api/menu/index";
 
-export const usePermissionStore = defineStore('permission', () => {
+const Layout = () => import("@/layout/index.vue");
+const modules = import.meta.glob("../../views/**/**.vue");
+
+const hasPermission = (roles: string[], route: RouteRecordRaw) => {
+  if (route.meta && route.meta.roles) {
+    if (roles.includes("ROOT")) {
+      return true;
+    }
+    return roles.some((role) => {
+      if (route.meta?.roles !== undefined) {
+        return (route.meta.roles as string[]).includes(role);
+      }
+    });
+
+    return false;
+  }
+};
+
+const filterAsyncRoutes = (routes: RouteRecordRaw[], roles: string[]) => {
+  const asyncRoutes: RouteRecordRaw[] = [];
+
+  routes.forEach((route) => {
+    const tmpRoute = { ...route };
+
+    if (hasPermission(roles, tmpRoute)) {
+      if (tmpRoute.component?.toString() === "Layout") {
+        tmpRoute.component = Layout;
+      } else {
+        const component = modules[`../../views/${tmpRoute.component}.vue`];
+        if (component) {
+          tmpRoute.component = component;
+        } else {
+          tmpRoute.component = modules[`../../views/error-page/404.vue`];
+        }
+      }
+      
+      if (tmpRoute.children) {
+        tmpRoute.children = filterAsyncRoutes(tmpRoute.children, roles);
+      }
+
+      asyncRoutes.push(tmpRoute);
+    }
+  });
+};
+
+export const usePermissionStore = defineStore("permission", () => {
   const routes = ref<RouteRecordRaw[]>([]);
 
   function setRoutes(newRoutes: RouteRecordRaw[]) {
     routes.value = constantRoutes.concat(newRoutes);
   }
-  /**
-   * 生成动态路由
-   *
-   * @param roles 用户角色集合
-   * @returns
-   */
+
   function generateRoutes(roles: string[]) {
-    return new Promise<RouteRecordRaw[]>((resolve, reject) => {
-      // 接口获取所有路由
+    return new Promise<RouteRecordRaw>((reslove, reject) => {
       listRoutes()
         .then(({ data: asyncRoutes }) => {
-          // 根据角色获取有访问权限的路由
           const accessedRoutes = filterAsyncRoutes(asyncRoutes, roles);
           setRoutes(accessedRoutes);
-          resolve(accessedRoutes);
+          reslove(accessedRoutes);
         })
-        .catch(error => {
+        .catch((error) => {
           reject(error);
         });
     });
   }
-  // 导出 store 的动态路由数据 routes 
-  return { routes, setRoutes, generateRoutes };
+
+  return {
+    routes,
+    setRoutes,
+    generateRoutes,
+  };
 });
 
+// 非setup
+export function usePermissionStoreHook() {
+  return usePermissionStore(store);
+}
