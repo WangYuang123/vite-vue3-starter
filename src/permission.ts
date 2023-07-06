@@ -24,15 +24,27 @@ router.beforeEach(async (to, from, next) => {
       const userStore = useUserStoreHook();
       const hasRoles = userStore.roles && userStore.roles.length > 0;
       if (hasRoles) {
-        console.log("用户有权限");
+        // 未匹配到任何路由，跳转404
+        if (to.matched.length === 0) {
+          from.name ? next({ name: from.name }) : next("/404");
+        } else {
+          next();
+        }
       } else {
-        const { roles } = await userStore.getInfo();
-        // console.log(roles)
-        const accessedRoutes = await permissionStore.generateRoutes(roles)
-        console.log(accessedRoutes)
+        try {
+          const { roles } = await userStore.getInfo();
+          const accessedRoutes = await permissionStore.generateRoutes(roles)
+          console.log(accessedRoutes)
+          // 挂载路由占位
+          next({...to, replace: true})
+        } catch (error) {
+          // 移除token并跳转登录页
+          await userStore.resetToken()
+          next(`/login?redirect=${to.path}`)
+          NProgress.done()
+        }
       }
     }
-    next();
   } else {
     // 未登录可以访问白名单页面
     if (whiteList.indexOf(to.path) !== -1) {

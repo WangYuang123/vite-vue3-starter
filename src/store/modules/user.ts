@@ -61,11 +61,20 @@ export const useUserStore = defineStore("user", () => {
     });
   }
 
+  function resetToken() {
+    token.value = "";
+    nickname.value = "";
+    avatar.value = "";
+    roles.value = [];
+    perms.value = [];  
+  }
+
   return {
     token,
     login,
     roles,
-    getInfo
+    getInfo,
+    resetToken
   };
 });
 

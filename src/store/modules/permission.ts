@@ -27,8 +27,9 @@ const filterAsyncRoutes = (routes: RouteRecordRaw[], roles: string[]) => {
 
   routes.forEach((route) => {
     const tmpRoute = { ...route };
+    const bool = hasPermission(roles, tmpRoute)
 
-    if (hasPermission(roles, tmpRoute)) {
+    if (bool) {
       if (tmpRoute.component?.toString() === "Layout") {
         tmpRoute.component = Layout;
       } else {
@@ -43,10 +44,10 @@ const filterAsyncRoutes = (routes: RouteRecordRaw[], roles: string[]) => {
       if (tmpRoute.children) {
         tmpRoute.children = filterAsyncRoutes(tmpRoute.children, roles);
       }
-
       asyncRoutes.push(tmpRoute);
     }
   });
+  return asyncRoutes
 };
 
 export const usePermissionStore = defineStore("permission", () => {
