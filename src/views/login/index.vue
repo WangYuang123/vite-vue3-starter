@@ -20,23 +20,26 @@
         />
       </el-form-item>
 
-      <el-form-item prop="password">
-        <span class="p-2 text-white">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input
-          v-model="loginData.password"
-          class="flex-1"
-          placeholder="密码"
-          :type="passwordVisible === false ? 'password' : 'input'"
-          size="large"
-          name="password"
-          @keyup.enter="handleLogin"
-        />
-        <span class="mr-2" @click="passwordVisible = !passwordVisible">
-          <svg-icon :icon-class="passwordVisible === false ? 'eye' : 'eye-open'" class="text-white cursor-pointer" />
-        </span>
-      </el-form-item>
+      <el-tooltip :disabled="isCapslock === false" content="Caps lock is On" placement="right">
+        <el-form-item prop="password">
+          <span class="p-2 text-white">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input
+            v-model="loginData.password"
+            class="flex-1"
+            placeholder="密码"
+            :type="passwordVisible === false ? 'password' : 'input'"
+            size="large"
+            name="password"
+            @keyup="checkCapslock"
+            @keyup.enter="handleLogin"
+          />
+          <span class="mr-2" @click="passwordVisible = !passwordVisible">
+            <svg-icon :icon-class="passwordVisible === false ? 'eye' : 'eye-open'" class="text-white cursor-pointer" />
+          </span>
+        </el-form-item>
+      </el-tooltip>
 
       <el-form-item prop="verifyCode">
         <span class="p-2 text-white">
@@ -76,8 +79,8 @@ const passwordVisible = ref(false);
 const loading = ref(false);
 
 const loginData = ref<LoginData>({
-  username: "admin",
-  password: "123456",
+  username: "",
+  password: "",
   verifyCode: "",
 });
 
@@ -118,6 +121,15 @@ function handleLogin() {
       });
     }
   });
+}
+
+/**
+ * 大小写
+ */
+const isCapslock = ref(false);
+function checkCapslock(e: any) {
+  const { key } = e;
+  isCapslock.value = key && key.length === 1 && key >= "A" && key <= "Z";
 }
 
 onMounted(() => {

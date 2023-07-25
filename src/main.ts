@@ -3,9 +3,9 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import "virtual:svg-icons-register";
 import "uno.css";
+import { setupStore } from "@/store";
 import router from "./router/index";
 
-import { setupStore } from "@/store";
 
 import "@/permission";
 
