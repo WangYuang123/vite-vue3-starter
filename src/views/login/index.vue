@@ -92,33 +92,31 @@ const loginRules = {
 
 const loginFormRef = ref(ElForm);
 
-const captchaBase64 = ref();
-
-function getCaptcha() {
-  getCaptchaApi().then(({ data }) => {
-    const { verifyCodeBase64, verifyCodeKey } = data;
-    loginData.value.verifyCodeKey = verifyCodeKey;
-    captchaBase64.value = verifyCodeBase64;
-  });
-}
-
 function handleLogin() {
   loginFormRef.value.validate((valid: boolean) => {
     if (valid) {
       loading.value = true;
-      userStore.login(loginData.value).then(() => {
-        const query: LocationQuery = route.query;
-        const redirect = (query.redirect as LocationQueryValue) ?? "/";
+      userStore
+        .login(loginData.value)
+        .then(() => {
+          const query: LocationQuery = route.query;
+          const redirect = (query.redirect as LocationQueryValue) ?? "/";
 
-        const otherQueryParams = Object.keys(query).reduce((acc: any, cur: string) => {
-          if (cur !== "redirect") {
-            acc[cur] = query[cur];
-          }
-          return acc;
-        }, {});
+          const otherQueryParams = Object.keys(query).reduce((acc: any, cur: string) => {
+            if (cur !== "redirect") {
+              acc[cur] = query[cur];
+            }
+            return acc;
+          }, {});
 
-        router.push({ path: redirect, query: otherQueryParams });
-      });
+          router.push({ path: redirect, query: otherQueryParams });
+        })
+        .catch(() => {
+          getCaptcha();
+        })
+        .finally(() => {
+          loading.value = false;
+        });
     }
   });
 }
@@ -130,6 +128,18 @@ const isCapslock = ref(false);
 function checkCapslock(e: any) {
   const { key } = e;
   isCapslock.value = key && key.length === 1 && key >= "A" && key <= "Z";
+}
+
+/**
+ * 验证码
+ */
+const captchaBase64 = ref();
+function getCaptcha() {
+  getCaptchaApi().then(({ data }) => {
+    const { verifyCodeBase64, verifyCodeKey } = data;
+    loginData.value.verifyCodeKey = verifyCodeKey;
+    captchaBase64.value = verifyCodeBase64;
+  });
 }
 
 onMounted(() => {
