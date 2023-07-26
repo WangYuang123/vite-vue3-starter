@@ -79,8 +79,8 @@ const passwordVisible = ref(false);
 const loading = ref(false);
 
 const loginData = ref<LoginData>({
-  username: "",
-  password: "",
+  username: "admin",
+  password: "123456",
   verifyCode: "",
 });
 
