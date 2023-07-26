@@ -1,10 +1,12 @@
 <template>
-  <div class="app-wrapper">layout
-    <router-view />
+  <div class="app-wrapper">
+    <app-main />
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { AppMain } from "./components/index";
+</script>
 
 <style lang="scss" scoped>
 .app-wrapper {
