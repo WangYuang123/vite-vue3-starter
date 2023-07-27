@@ -1,11 +1,13 @@
 <template>
   <div class="app-wrapper">
-    <app-main />
+    <SlideBar class="sidebar-container" />
+
+    <AppMain />
   </div>
 </template>
 
 <script setup lang="ts">
-import { AppMain } from "./components/index";
+import { AppMain, SlideBar } from "./components/index";
 </script>
 
 <style lang="scss" scoped>
