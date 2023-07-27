@@ -1,2 +1,13 @@
 $bg-color:#242424;
 $sideBarWidth: 210px;
+
+
+:root {
+  --menuBg: #304156;
+  --menuText:  #bfcbd9;
+  --menuActiveText: #409eff;
+}
+
+$menuBg: var(--menuBg);
+$menuText: var(--menuText);
+$menuActiveText: var(--menuActiveText);
