@@ -24,7 +24,7 @@ defineProps({
 
 import { useSettingStore } from "@/store/modules/settings";
 const settingStore = useSettingStore();
-console.log(settingStore.sidebarLogo);
+console.log('sidebarLogo',settingStore.sidebarLogo);
 
 const logo = ref(new URL(`../../../assets/logo.png`, import.meta.url).href);
 </script>

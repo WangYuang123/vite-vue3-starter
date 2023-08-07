@@ -6,7 +6,7 @@ export const useAppStore = defineStore("app", () => {
   const device = useStorage("device", "desktop");
   const size = useStorage<any>("size", defaultSetting.size);
 
-  const slideStatus = useStorage("slideStatus", "closed");
+  const slideStatus = useStorage("slideStatus", "open");
   const sidebar = reactive({
     opened: slideStatus.value !== "closed",
     withoutAnimation: false,

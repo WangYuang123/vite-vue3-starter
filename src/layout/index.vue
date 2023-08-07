@@ -2,12 +2,21 @@
   <div class="app-wrapper">
     <Sidebar class="sidebar-container" />
 
-    <AppMain />
+    <div class="main-container">
+      <div :class="{ 'fixed-header': fixedHeader }">
+        <Navbar />
+      </div>
+      <AppMain />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { AppMain, Sidebar } from "./components/index";
+import { AppMain, Sidebar, Navbar } from "./components/index";
+
+import { useSettingStore } from "@/store/modules/settings";
+const settingStore = useSettingStore();
+const fixedHeader = computed(() => settingStore.fixedHeader);
 </script>
 
 <style lang="scss" scoped>

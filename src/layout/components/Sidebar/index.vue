@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'has-logo': sidebarLogo }">
-    <Logo v-if="sidebarLogo" :collapse="appStore.sidebar.opened" />
+    <Logo v-if="sidebarLogo" :collapse="!appStore.sidebar.opened" />
 
     <el-scrollbar>
       <el-menu
@@ -38,7 +38,6 @@ import { useAppStore } from "@/store/modules/app";
 import { useRoute } from "vue-router";
 
 const appStore = useAppStore();
-console.log('collapse:',!appStore.sidebar.opened)
 
 const currRoute = useRoute();
 
