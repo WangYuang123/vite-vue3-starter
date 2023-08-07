@@ -13,8 +13,13 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <!-- v-for="route in permissionStore.routes" :key="route.path" :item="route"  -->
-        <SidebarItem v-for="route in permissionStore.routes" :key="route.path" :item="route" :basePath="route.path" />
+        <SidebarItem
+          v-for="route in permissionStore.routes"
+          :key="route.path"
+          :item="route"
+          :basePath="route.path"
+          :is-collapse="!appStore.sidebar.opened"
+        />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -31,7 +36,9 @@ const { sidebarLogo } = storeToRefs(settingStore);
 
 import { useAppStore } from "@/store/modules/app";
 import { useRoute } from "vue-router";
+
 const appStore = useAppStore();
+console.log('collapse:',!appStore.sidebar.opened)
 
 const currRoute = useRoute();
 

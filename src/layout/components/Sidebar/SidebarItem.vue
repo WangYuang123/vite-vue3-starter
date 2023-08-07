@@ -4,24 +4,53 @@
     <template
       v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren)"
     >
-      <AppLink v-if="onlyOneChild.meta" :to="''"></AppLink>
+      <AppLink v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
+        <el-menu-item :index="resolvePath(onlyOneChild.path)">
+          <SvgIcon v-if="onlyOneChild.meta && onlyOneChild.meta.icon" :iconClass="onlyOneChild.meta.icon"></SvgIcon>
+          <template #title>
+            {{ onlyOneChild.meta.title }}
+          </template>
+        </el-menu-item>
+      </AppLink>
     </template>
+
+    <!-- 包含多个子路由 -->
+    <el-sub-menu v-else :index="resolvePath(item.path)" teleported>
+      <template #title>
+        <svg-icon
+          v-if="item.meta && item.meta.icon"
+          :icon-class="item.meta.icon"
+        />
+        <span v-if="item.meta && item.meta.title">{{
+          item.meta.title
+        }}</span>
+      </template>
+
+      <sidebar-item
+        v-for="child in item.children"
+        :key="child.path"
+        :item="child"
+        :base-path="resolvePath(child.path)"
+      />
+    </el-sub-menu>
   </div>
 </template>
 
 <script setup lang="ts">
+import path from "path-browserify";
 import AppLink from "./Link.vue";
 import { isExternal } from "@/utils/index";
+import SvgIcon from "@/components/SvgIcon/index.vue";
 
-defineProps({
+const props = defineProps({
   item: {
     type: Object,
     required: true,
   },
   basePath: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 /**
@@ -29,9 +58,17 @@ defineProps({
  * @param routePath
  */
 function resolvePath(routePath: string) {
-  if(isExternal(routePath)) {
-    return routePath
+  if (isExternal(routePath)) {
+    return routePath;
   }
+
+  if (isExternal(props.basePath)) {
+    return props.basePath;
+  }
+
+  // 完整路径 = 父级路径 + 路由路径
+  const fullPath = path.resolve(props.basePath, routePath); // 相对路径 -》 绝对路径
+  return fullPath;
 }
 
 const onlyOneChild = ref(); // 临时变量，唯一子路由
