@@ -17,6 +17,7 @@ declare module 'vue' {
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    Hamburger: typeof import('./../components/Hamburger/index.vue')['default']
     HelloWorld: typeof import('./../components/HelloWorld.vue')['default']
     IEpInfoFilled: typeof import('~icons/ep/info-filled')['default']
     IEpSuccessFilled: typeof import('~icons/ep/success-filled')['default']
