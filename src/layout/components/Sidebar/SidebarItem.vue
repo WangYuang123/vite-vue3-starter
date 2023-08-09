@@ -1,5 +1,6 @@
 <template>
-  <div v-if="!item.meta || !item.meta.hidden">
+  <template v-if="item.meta && !item.meta.hidden">
+    <!-- <div> -->
     <!-- 只包含一个子路由节点的路由，显示其【唯一子路由】 -->
     <template
       v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren)"
@@ -17,13 +18,8 @@
     <!-- 包含多个子路由 -->
     <el-sub-menu v-else :index="resolvePath(item.path)" teleported>
       <template #title>
-        <svg-icon
-          v-if="item.meta && item.meta.icon"
-          :icon-class="item.meta.icon"
-        />
-        <span v-if="item.meta && item.meta.title">{{
-          item.meta.title
-        }}</span>
+        <svg-icon v-if="item.meta && item.meta.icon" :icon-class="item.meta.icon" />
+        <span v-if="item.meta && item.meta.title">{{ item.meta.title }}</span>
       </template>
 
       <sidebar-item
@@ -33,7 +29,8 @@
         :base-path="resolvePath(child.path)"
       />
     </el-sub-menu>
-  </div>
+  </template>
+  <!-- </div> -->
 </template>
 
 <script setup lang="ts">
