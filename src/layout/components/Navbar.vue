@@ -3,11 +3,17 @@
   <div class="navbar">
     <!-- 左侧面包屑 -->
     <div class="flex">
-      <hamburger />
+      <hamburger :is-active="appStore.sidebar.opened" @toggleClick="toggleSideBar" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
+import { useAppStore } from "@/store/modules/app";
+const appStore = useAppStore();
+
+function toggleSideBar() {
+  appStore.toggleSidebar(true);
+}
 </script>
 <style lang="scss" scoped>
 .navbar {

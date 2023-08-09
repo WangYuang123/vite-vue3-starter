@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper">
+  <div :class="classObj" class="app-wrapper">
     <Sidebar class="sidebar-container" />
 
     <div class="main-container">
@@ -17,6 +17,14 @@ import { AppMain, Sidebar, Navbar } from "./components/index";
 import { useSettingStore } from "@/store/modules/settings";
 const settingStore = useSettingStore();
 const fixedHeader = computed(() => settingStore.fixedHeader);
+
+import { useAppStore } from "@/store/modules/app";
+const appStore = useAppStore();
+
+const classObj = computed(() => ({
+  hideSidebar: !appStore.sidebar.opened,
+  withoutAnimation: appStore.sidebar.withoutAnimation,
+}));
 </script>
 
 <style lang="scss" scoped>
