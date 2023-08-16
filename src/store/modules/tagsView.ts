@@ -1,9 +1,11 @@
 import { defineStore } from "pinia";
 
 export const useTagsViewStore = defineStore("tagsView", () => {
-  const cacheViews = ref<string[]>([]);
+  function delAllViews() {
+    console.log("执行清除所有路由操作");
+  }
 
   return {
-    cacheViews,
+    delAllViews,
   };
 });

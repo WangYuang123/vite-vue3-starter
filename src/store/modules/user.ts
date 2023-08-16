@@ -2,10 +2,12 @@ import { defineStore } from "pinia";
 import { LoginData } from "@/api/auth/types";
 import { store } from "@/store";
 
-import { loginApi } from "@/api/auth";
+import { loginApi, logoutApi } from "@/api/auth";
 import { useStorage } from "@vueuse/core";
 import { UserInfo } from "@/api/user/types";
 import { getUserInfo } from "@/api/user/index";
+
+import { resetRouter } from "@/router/index";
 
 export const useUserStore = defineStore("user", () => {
   const token = useStorage("accessToken", "");
@@ -61,12 +63,27 @@ export const useUserStore = defineStore("user", () => {
     });
   }
 
+  function logout() {
+    return new Promise<void>((resolve, reject) => {
+      logoutApi()
+        .then(() => {
+          resetRouter();
+          resetToken();
+          location.reload(); // 清空路由
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
   function resetToken() {
     token.value = "";
     nickname.value = "";
     avatar.value = "";
     roles.value = [];
-    perms.value = [];  
+    perms.value = [];
   }
 
   return {
@@ -74,7 +91,9 @@ export const useUserStore = defineStore("user", () => {
     login,
     roles,
     getInfo,
-    resetToken
+    resetToken,
+    avatar,
+    logout,
   };
 });
 

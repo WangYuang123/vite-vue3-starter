@@ -9,6 +9,9 @@ declare module 'vue' {
   export interface GlobalComponents {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
+    ElDropdown: typeof import('element-plus/es')['ElDropdown']
+    ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
+    ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -23,12 +26,14 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     Hamburger: typeof import('./../components/Hamburger/index.vue')['default']
     HelloWorld: typeof import('./../components/HelloWorld.vue')['default']
+    IEpCaretBottom: typeof import('~icons/ep/caret-bottom')['default']
     IEpInfoFilled: typeof import('~icons/ep/info-filled')['default']
     IEpSuccessFilled: typeof import('~icons/ep/success-filled')['default']
     IEpWarningFilled: typeof import('~icons/ep/warning-filled')['default']
     IEpWarnTriangleFilled: typeof import('~icons/ep/warn-triangle-filled')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SizeSelect: typeof import('./../components/SizeSelect/index.vue')['default']
     SvgIcon: typeof import('./../components/SvgIcon/index.vue')['default']
   }
 }
