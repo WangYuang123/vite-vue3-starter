@@ -40,5 +40,6 @@ export const useSettingStore = defineStore("setting", () => {
     sidebarLogo,
     layout,
     changeSetting,
+    tagsView
   };
 });

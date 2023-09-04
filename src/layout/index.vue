@@ -5,6 +5,7 @@
     <div class="main-container">
       <div :class="{ 'fixed-header': fixedHeader }">
         <Navbar />
+        <TagsView v-if="showTagsView"/>
       </div>
       <AppMain />
     </div>
@@ -12,19 +13,23 @@
 </template>
 
 <script setup lang="ts">
-import { AppMain, Sidebar, Navbar } from "./components/index";
-
+import { AppMain, Sidebar, Navbar, TagsView } from "./components/index";
+import { useAppStore } from "@/store/modules/app";
 import { useSettingStore } from "@/store/modules/settings";
+
 const settingStore = useSettingStore();
 const fixedHeader = computed(() => settingStore.fixedHeader);
 
-import { useAppStore } from "@/store/modules/app";
+
 const appStore = useAppStore();
 
 const classObj = computed(() => ({
   hideSidebar: !appStore.sidebar.opened,
   withoutAnimation: appStore.sidebar.withoutAnimation,
 }));
+
+
+const showTagsView = computed(() => settingStore.tagsView)
 </script>
 
 <style lang="scss" scoped>
