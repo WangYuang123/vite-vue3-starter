@@ -1,11 +1,30 @@
 <template>
   <div class="tags-container">
-    <router-link> </router-link>
+    <div v-for="item in visitedViews" :key="item.path">{{ item.title }}</div>
+    <!-- <router-link>
+
+    </router-link> -->
   </div>
 </template>
 
 <script setup lang="ts">
-const visitedViews = [];
+import { watch } from "vue";
+import { useRoute } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useTagsViewStore } from "@/store/modules/tagsView";
+const tagsViewStore = useTagsViewStore();
+const { visitedViews } = storeToRefs(tagsViewStore);
+const route = useRoute();
+function addTags() {
+  if (route.name) {
+    tagsViewStore.addView(route);
+  }
+}
+watch(route, () => {
+  addTags();
+});
+
+// const {}  = storeToRefs(tags)
 </script>
 
 <style lang="scss" scoped>

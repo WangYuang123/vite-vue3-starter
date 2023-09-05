@@ -1,10 +1,9 @@
 import router from "@/router";
 import { useUserStoreHook } from "@/store/modules/user";
-import {usePermissionStoreHook} from '@/store/modules/permission'
+import { usePermissionStoreHook } from "@/store/modules/permission";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 NProgress.configure({ showSpinner: false }); // 进度条
-
 
 const permissionStore = usePermissionStoreHook();
 // 白名单路由
@@ -33,15 +32,20 @@ router.beforeEach(async (to, from, next) => {
       } else {
         try {
           const { roles } = await userStore.getInfo();
-          const accessedRoutes = await permissionStore.generateRoutes(roles)
+          const accessedRoutes = await permissionStore.generateRoutes(roles);
           console.log(accessedRoutes)
+          accessedRoutes.forEach((route, index) => {
+            if (index === 0) {
+              router.addRoute(route);
+            }
+          });
           // 挂载路由占位
-          next({...to, replace: true})
+          next({ ...to, replace: true });
         } catch (error) {
           // 移除token并跳转登录页
-          await userStore.resetToken()
-          next(`/login?redirect=${to.path}`)
-          NProgress.done()
+          await userStore.resetToken();
+          next(`/login?redirect=${to.path}`);
+          NProgress.done();
         }
       }
     }
