@@ -18,8 +18,30 @@ export const useTagsViewStore = defineStore("tagsView", () => {
     );
   }
 
+  function delVisitedView(view: TagsView) {
+    return new Promise((resolve) => {
+      for (const [i, v] of visitedViews.value.entries()) {
+        if (v.path === view.path) {
+          visitedViews.value.splice(i, 1);
+          break;
+        }
+      }
+      resolve([...visitedViews.value]);
+    });
+  }
+
   function addView(view: TagsView) {
     addVisitedView(view);
+  }
+
+  function delView(view: TagsView) {
+    return new Promise((resolve) => {
+      delVisitedView(view);
+
+      resolve({
+        visitedViews: [...visitedViews.value],
+      });
+    });
   }
 
   function delAllViews() {
@@ -30,5 +52,6 @@ export const useTagsViewStore = defineStore("tagsView", () => {
     delAllViews,
     visitedViews,
     addView,
+    delView
   };
 });

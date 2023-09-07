@@ -1,17 +1,54 @@
 <template>
   <div class="tags-container">
-    <div v-for="item in visitedViews" :key="item.path">{{ item.title }}</div>
-    <!-- <router-link>
+    <router-link
+      v-for="item in visitedViews"
+      :key="item.path"
+      class="tags-item"
+      :class="{ active: isActive(item) }"
+      :data-path="item.path"
+      :to="{ path: item.path, query: item.query }"
+      @contextmenu.prevent="openTagMenu(item, $event)"
+    >
+      {{ item.title }}
+      <span class="tags-item-close" @click.prevent.stop=""></span>
+    </router-link>
 
-    </router-link> -->
+    <!-- tag标签操作菜单 -->
+    <ul v-show="tagMenuVisible" class="tag-menu" :style="{ left: left + 'px', top: top + 'px' }">
+      <li>
+        <svg-icon icon-class="refresh"></svg-icon>
+        刷新
+      </li>
+      <li>
+        <svg-icon icon-class="close"></svg-icon>
+        关闭
+      </li>
+      <li>
+        <svg-icon icon-class="close_other"></svg-icon>
+        关闭其他
+      </li>
+      <li>
+        <svg-icon icon-class="close_left"></svg-icon>
+        关闭左侧
+      </li>
+      <li>
+        <svg-icon icon-class="close_right"></svg-icon>
+        关闭右侧
+      </li>
+      <li>
+        <svg-icon icon-class="close_all"></svg-icon>
+        关闭所有
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch } from "vue";
+import { watch, getCurrentInstance, ComponentInternalInstance } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
-import { useTagsViewStore } from "@/store/modules/tagsView";
+import { useTagsViewStore, TagsView } from "@/store/modules/tagsView";
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const tagsViewStore = useTagsViewStore();
 const { visitedViews } = storeToRefs(tagsViewStore);
 const route = useRoute();
@@ -23,8 +60,56 @@ function addTags() {
 watch(route, () => {
   addTags();
 });
+function isActive(tag: TagsView) {
+  return tag.path === route.path;
+}
+const left = ref(0);
+const top = ref(0);
+const tagMenuVisible = ref(false); // 标签操作菜单显示状态
+watch(tagMenuVisible, (value) => {
+  if (value) {
+    document.body.addEventListener("click", closeTagMenu);
+  } else {
+    document.body.removeEventListener("click", closeTagMenu);
+  }
+});
+const selectedTag = ref({});
+function openTagMenu(tag: TagsView, e: MouseEvent) {
+  const meunMinWidth = 105;
+  // console.log("test", proxy?.$el);
+  const offsetLeft = proxy?.$el.getBoundingClientRect().left;
+  const offsetWidth = proxy?.$el.offsetWidth;
+  const maxLeft = offsetWidth - meunMinWidth;
+  const l = e.clientX - offsetLeft + 15;
 
-// const {}  = storeToRefs(tags)
+  if (l > maxLeft) {
+    left.value = maxLeft;
+  } else {
+    left.value = l;
+  }
+
+  top.value = e.clientY;
+  tagMenuVisible.value = true;
+  selectedTag.value = tag;
+}
+function closeTagMenu() {
+  tagMenuVisible.value = false;
+}
+
+
+
+function toLastView(visitedViews: TagsView[], view?:any) {
+  const lastView = visitedViews.slice(-1)[0]
+}
+function closeSelectedTag(tag: TagsView) {
+  tagsViewStore.delView(view).then((res: any) => {
+    if(isActive(view)) {
+      
+    }
+  })
+}
+
+
 </script>
 
 <style lang="scss" scoped>
