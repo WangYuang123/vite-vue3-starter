@@ -27,6 +27,7 @@ declare module 'vue' {
     Hamburger: typeof import('./../components/Hamburger/index.vue')['default']
     HelloWorld: typeof import('./../components/HelloWorld.vue')['default']
     IEpCaretBottom: typeof import('~icons/ep/caret-bottom')['default']
+    IEpClose: typeof import('~icons/ep/close')['default']
     IEpInfoFilled: typeof import('~icons/ep/info-filled')['default']
     IEpSuccessFilled: typeof import('~icons/ep/success-filled')['default']
     IEpWarningFilled: typeof import('~icons/ep/warning-filled')['default']

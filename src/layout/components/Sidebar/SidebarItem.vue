@@ -1,5 +1,5 @@
 <template>
-  <template v-if="item.meta && !item.meta.hidden">
+  <template v-if="!item.meta || !item.meta.hidden">
     <!-- <div> -->
     <!-- 只包含一个子路由节点的路由，显示其【唯一子路由】 -->
     <template

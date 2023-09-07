@@ -10,7 +10,9 @@
       @contextmenu.prevent="openTagMenu(item, $event)"
     >
       {{ item.title }}
-      <span class="tags-item-close" @click.prevent.stop=""></span>
+      <span v-if="!isAffix(item)" class="tags-item-close" @click.prevent.stop="closeSelectedTag(item)">
+        <i-ep-close class="text-[10px]"></i-ep-close>
+      </span>
     </router-link>
 
     <!-- tag标签操作菜单 -->
@@ -48,6 +50,7 @@ import { watch, getCurrentInstance, ComponentInternalInstance } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useTagsViewStore, TagsView } from "@/store/modules/tagsView";
+import router from "@/router";
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const tagsViewStore = useTagsViewStore();
 const { visitedViews } = storeToRefs(tagsViewStore);
@@ -59,9 +62,14 @@ function addTags() {
 }
 watch(route, () => {
   addTags();
+}, {
+  immediate: true
 });
 function isActive(tag: TagsView) {
   return tag.path === route.path;
+}
+function isAffix(tag: TagsView) {
+  return tag.meta && tag.meta.affix
 }
 const left = ref(0);
 const top = ref(0);
@@ -76,7 +84,6 @@ watch(tagMenuVisible, (value) => {
 const selectedTag = ref({});
 function openTagMenu(tag: TagsView, e: MouseEvent) {
   const meunMinWidth = 105;
-  // console.log("test", proxy?.$el);
   const offsetLeft = proxy?.$el.getBoundingClientRect().left;
   const offsetWidth = proxy?.$el.offsetWidth;
   const maxLeft = offsetWidth - meunMinWidth;
@@ -96,20 +103,25 @@ function closeTagMenu() {
   tagMenuVisible.value = false;
 }
 
-
-
-function toLastView(visitedViews: TagsView[], view?:any) {
-  const lastView = visitedViews.slice(-1)[0]
-}
-function closeSelectedTag(tag: TagsView) {
-  tagsViewStore.delView(view).then((res: any) => {
-    if(isActive(view)) {
-      
+function toLastView(visitedViews: TagsView[], view?: any) {
+  const lastView = visitedViews.slice(-1)[0]; // 获取最后一个标签
+  if (lastView && lastView.fullPath) {
+    router.push(lastView.fullPath);
+  } else {
+    if (view.name === "Dashboard") {
+      router.replace({ path: "/redirect" + view.fullPath });
+    } else {
+      router.push("/");
     }
-  })
+  }
 }
-
-
+function closeSelectedTag(view: TagsView) {
+  tagsViewStore.delView(view).then((res: any) => {
+    if (isActive(view)) {
+      toLastView(res.visitedViews, view);
+    }
+  });
+}
 </script>
 
 <style lang="scss" scoped>

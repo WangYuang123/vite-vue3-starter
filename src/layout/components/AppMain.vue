@@ -1,8 +1,9 @@
 <template>
   <section class="app-main">
+    {{tagsViewStore.cachedViews}}
     <router-view v-slot="{ Component, route }">
       <transition name="route-fade" mode="out-in">
-        <keep-alive :include="tagsViewStore.cacheViews">
+        <keep-alive :include="tagsViewStore.cachedViews">
           <component :is="Component" :key="route.fullPath" />
         </keep-alive>
       </transition>

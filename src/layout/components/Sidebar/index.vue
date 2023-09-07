@@ -1,7 +1,6 @@
 <template>
   <div :class="{ 'has-logo': sidebarLogo }">
     <Logo v-if="sidebarLogo" :collapse="!appStore.sidebar.opened" />
-
     <el-scrollbar>
       <el-menu
         :default-active="currRoute.path"
@@ -47,4 +46,5 @@ import SidebarItem from "./SidebarItem.vue";
 
 import { usePermissionStore } from "@/store/modules/permission";
 const permissionStore = usePermissionStore();
+console.log(permissionStore.routes)
 </script>
