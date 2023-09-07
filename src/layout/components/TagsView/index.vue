@@ -17,7 +17,7 @@
 
     <!-- tag标签操作菜单 -->
     <ul v-show="tagMenuVisible" class="tag-menu" :style="{ left: left + 'px', top: top + 'px' }">
-      <li>
+      <li @click="refreshSelectedTag(selectedTag)">
         <svg-icon icon-class="refresh"></svg-icon>
         刷新
       </li>
@@ -60,16 +60,20 @@ function addTags() {
     tagsViewStore.addView(route);
   }
 }
-watch(route, () => {
-  addTags();
-}, {
-  immediate: true
-});
+watch(
+  route,
+  () => {
+    addTags();
+  },
+  {
+    immediate: true,
+  }
+);
 function isActive(tag: TagsView) {
   return tag.path === route.path;
 }
 function isAffix(tag: TagsView) {
-  return tag.meta && tag.meta.affix
+  return tag.meta && tag.meta.affix;
 }
 const left = ref(0);
 const top = ref(0);
@@ -120,6 +124,16 @@ function closeSelectedTag(view: TagsView) {
     if (isActive(view)) {
       toLastView(res.visitedViews, view);
     }
+  });
+}
+
+function refreshSelectedTag(view: TagsView) {
+  tagsViewStore.delCachedView(view);
+  const { fullPath } = view;
+  nextTick(() => {
+    router.replace({ path: "/redirect" + fullPath }).catch((err) => {
+      console.warn(err);
+    });
   });
 }
 </script>
