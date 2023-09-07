@@ -1,6 +1,6 @@
-<script setup lang="ts">
-</script>
+<!-- <script setup lang="ts">
+</script> -->
 
 <template>
- dashboard
+ <h1>dashboard</h1>
 </template>

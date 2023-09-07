@@ -18,7 +18,7 @@ export const constantRoutes: RouteRecordRaw[] = [
 
   {
     path: "/login",
-    name: 'Login',
+    name: "Login",
     component: () => import("@/views/login/index.vue"),
     meta: { hidden: true },
   },
@@ -31,7 +31,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         path: "dashboard",
         component: () => import("@/views/dashboard/index.vue"),
         name: "Dashboard",
-        meta: { title: "dashboard", icon: "homepage", affix: true, keepAlive: true },
+        meta: { title: "dashboard", icon: "homepage", affix: true },
       },
     ],
   },
@@ -54,7 +54,5 @@ export function resetRouter() {
   router.replace({ path: "/login" });
   location.reload();
 }
-
-
 
 export default router;

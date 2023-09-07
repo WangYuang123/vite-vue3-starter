@@ -1,6 +1,5 @@
 <template>
   <section class="app-main">
-    {{tagsViewStore.cachedViews}}
     <router-view v-slot="{ Component, route }">
       <transition name="route-fade" mode="out-in">
         <keep-alive :include="tagsViewStore.cachedViews">
